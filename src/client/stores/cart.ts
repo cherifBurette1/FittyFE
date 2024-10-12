@@ -10,6 +10,7 @@ export const useCartStore = defineStore('cart', () => {
   const selectedPaymentOption = ref<string | null>(null)
   const toast = useToast()
   const selectedAddressId = ref<string | null>(null)
+  const promo = ref<string | null>(null)
 
   function addToCart(id: string, quantity: number) {
     const existingItem = cartItems.value.find((item) => item.id === id)
@@ -86,6 +87,7 @@ export const useCartStore = defineStore('cart', () => {
     getPaymentOptions,
     paymentOptions,
     selectedPaymentOption,
-    selectedAddressId
+    selectedAddressId,
+    promo
   }
 })

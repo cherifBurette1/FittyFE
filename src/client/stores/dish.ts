@@ -12,16 +12,86 @@ export const useDishStore = defineStore('dishes', () => {
 
   async function fetchDishes() {
     dishes.value = [
-      { id: '1', name: 'Pizza', price: '375', rating: '5' },
-      { id: '2', name: 'Pizza', price: '375', rating: '5' },
-      { id: '3', name: 'Pizza', price: '375', rating: '5' },
-      { id: '4', name: 'Pizza', price: '375', rating: '5' },
-      { id: '5', name: 'Pizza', price: '375', rating: '5' },
-      { id: '6', name: 'Pizza', price: '375', rating: '5' },
-      { id: '7', name: 'Pizza', price: '375', rating: '5' },
-      { id: '8', name: 'Pizza', price: '375', rating: '5' },
-      { id: '9', name: 'Pizza', price: '375', rating: '5' },
-      { id: '10', name: 'Pizza', price: '375', rating: '5' }
+      {
+        id: '1',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: true,
+        isAddedToFavorites: true
+      },
+      {
+        id: '2',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: false,
+        isAddedToFavorites: false
+      },
+      {
+        id: '3',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: false,
+        isAddedToFavorites: false
+      },
+      {
+        id: '4',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: false,
+        isAddedToFavorites: false
+      },
+      {
+        id: '5',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: false,
+        isAddedToFavorites: false
+      },
+      {
+        id: '6',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: false,
+        isAddedToFavorites: false
+      },
+      {
+        id: '7',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: false,
+        isAddedToFavorites: false
+      },
+      {
+        id: '8',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: false,
+        isAddedToFavorites: false
+      },
+      {
+        id: '9',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: false,
+        isAddedToFavorites: false
+      },
+      {
+        id: '10',
+        name: 'Pizza',
+        price: '375',
+        rating: '5',
+        isAddedToCart: false,
+        isAddedToFavorites: false
+      }
     ]
   }
   async function fetchProductDetails(id: string) {
@@ -46,7 +116,9 @@ export const useDishStore = defineStore('dishes', () => {
         weight: '350gm',
         nature: 'Chinese',
         time: '25min'
-      }
+      },
+      isAddedToCart: false,
+      isAddedToFavorites: false
     }
   }
   async function fetchCategories() {

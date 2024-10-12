@@ -3,6 +3,8 @@ type dishType = {
   name: string
   price: string
   rating: string
+  isAddedToCart: boolean
+  isAddedToFavorites: boolean
 }
 type categoryType = {
   id: string
@@ -20,6 +22,8 @@ type productDetails = {
   imgURL: string
   Price: number
   tags: productTags[]
+  isAddedToCart: boolean
+  isAddedToFavorites: boolean
   productNutrients: productNutrients
 }
 type productNutrients = {
@@ -66,6 +70,22 @@ type paymentOptionType = {
   name: string
   isActive: boolean
 }
+type OrderItem = {
+  name: string
+  quantity: number
+  price: number
+}
+
+type Order = {
+  id: number
+  date: string
+  status: string
+  total: number
+  address: string
+  shippingCompany: string
+  paymentMethod: string
+  items: OrderItem[]
+}
 export type {
   dishType,
   categoryType,
@@ -74,5 +94,6 @@ export type {
   signUpType,
   mapInfo,
   shippingOptionType,
-  paymentOptionType
+  paymentOptionType,
+  Order
 }

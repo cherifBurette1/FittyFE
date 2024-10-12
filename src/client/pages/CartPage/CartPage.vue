@@ -190,7 +190,9 @@
           </div>
 
           <button
-            class="bg-red-500 hover:bg-red-600 px-5 py-2 text-sm text-white uppercase rounded-lg"
+            class="bg-red-500 disabled:opacity-50 hover:bg-red-600 px-5 py-2 text-sm text-white uppercase rounded-lg"
+            :disabled="cartItems.length === 0"
+            @click="applyPromoCode($event.toString())"
           >
             Apply
           </button>
@@ -275,6 +277,9 @@ const decreaseQuantity = (id: string) => {
 // Proceed to checkout
 const proceedToCheckout = () => {
   // Implement checkout logic here
+}
+function applyPromoCode(value: string) {
+  cartStore.promo = value
 }
 </script>
   

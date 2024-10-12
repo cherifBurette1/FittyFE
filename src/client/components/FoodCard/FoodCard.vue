@@ -23,14 +23,20 @@
         data-tooltip-target="cart-tooltip"
         type="button"
         title="Add to cart"
-        class="w-6 h-6 bg-white px-0.5 py-1 rounded-md fa-solid fa-cart-shopping hover:cursor-pointer"
+        :class="[
+          'w-6 h-6 bg-white px-0.5 py-1 rounded-md fa-solid fa-cart-shopping hover:cursor-pointer',
+          { ' text-red-500': dish.isAddedToCart }
+        ]"
         @click.stop="cartStore.addToCart(dish.id, 1)"
       />
       <button
         data-tooltip-target="cart-tooltip"
         type="button"
         title="Add to favorite"
-        class="w-6 h-6 bg-white p-1 fa-solid fa-heart rounded-md hover:cursor-pointer flex justify-center items-center"
+        :class="[
+          'w-6 h-6 bg-white p-1 fa-solid fa-heart rounded-md hover:cursor-pointer flex justify-center items-center',
+          { ' text-red-500': dish.isAddedToFavorites }
+        ]"
         @click.stop="dishStore.copyURL(dish.id)"
       />
       <button

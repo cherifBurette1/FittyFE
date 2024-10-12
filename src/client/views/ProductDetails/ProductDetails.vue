@@ -75,7 +75,12 @@
                 <!-- Heart and Share buttons inside the yellow card at the bottom -->
                 <div class="absolute bottom-2 right-2 flex space-x-2">
                   <button class="bg-white p-2 rounded-full shadow-md">
-                    <i class="fas fa-heart text-gray-500"></i>
+                    <i
+                      :class="[
+                        'fas fa-heart text-gray-500',
+                        { 'text-red-500': productDetails?.isAddedToFavorites }
+                      ]"
+                    ></i>
                   </button>
                   <button
                     class="bg-white p-2 rounded-full shadow-md"
@@ -153,7 +158,6 @@ const { addToCart } = useCartStore()
 onMounted(async () => {
   await dishStore.fetchProductDetails(route.query.id as string)
 })
-
 function isColorDark(hex: string) {
   const color = hex.replace('#', '')
   const r = parseInt(color.substr(0, 2), 16)

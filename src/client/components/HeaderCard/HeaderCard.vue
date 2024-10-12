@@ -1,6 +1,22 @@
 <template>
-  <header class="flex justify-between items-center px-6 mt-6 mb-6">
-    <img alt="Fitty logo" class="h-12" src="../../../shared/assets/fittyPNG.png" />
+  <header class="flex justify-between items-center px-6 mt-6 mb-6 relative">
+    <!-- Back Arrow -->
+    <div
+      v-if="router.currentRoute.value.name !== 'home'"
+      class="flex items-center hover:cursor-pointer mr-4"
+      @click="$router.go(-1)"
+    >
+      <i class="fa fa-arrow-left text-gray-600 hover:text-green-600"></i>
+    </div>
+
+    <!-- Logo -->
+    <img
+      alt="Fitty logo"
+      :class="['h-12', { ' ml-72': router.currentRoute.value.name !== 'home' }]"
+      src="../../../shared/assets/fittyPNG.png"
+    />
+
+    <!-- User Navigation -->
     <div class="flex items-center space-x-4">
       <!-- If user is logged in -->
       <div v-if="true" class="flex items-center space-x-4">
@@ -13,12 +29,27 @@
           <router-link :to="{ name: 'cart' }" class="text-gray-600 hover:text-green-600"
             >Cart</router-link
           >
-          <a href="/orders" class="text-gray-600 hover:text-green-600">Orders</a>
+          <router-link :to="{ name: 'orders' }" class="text-gray-600 hover:text-green-600"
+            >Orders</router-link
+          >
           <a href="/favorites" class="text-gray-600 hover:text-green-600">Favorites</a>
         </nav>
+
+        <!-- Notification Icon -->
+        <div class="relative">
+          <i class="fas fa-bell text-xl text-gray-600 hover:text-green-600"></i>
+          <span
+            v-if="notificationCount > 0"
+            class="absolute top-[-5px] right-[-5px] bg-red-600 text-white text-xs font-semibold rounded-full h-3 w-4 flex items-center justify-center"
+          >
+            {{ notificationCount }}
+          </span>
+        </div>
+
         <!-- Sign Out Button -->
         <button @click="() => {}" class="text-red-600 hover:text-red-800">Sign Out</button>
       </div>
+
       <div v-else>
         <button class="text-gray-600 mr-4" @click="router.push({ name: 'login' })">Login</button>
         <button
@@ -31,8 +62,17 @@
     </div>
   </header>
 </template>
-<script lang="ts" setup>
+  
+  <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
+// Example notification count - replace this with actual state management
+const notificationCount = 3 // You can manage this state with Pinia or Vuex
 </script>
+  
+  <style scoped>
+/* You can add additional styles here */
+</style>
+  
