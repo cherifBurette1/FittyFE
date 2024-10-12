@@ -64,7 +64,6 @@ export const useDishStore = defineStore('dishes', () => {
     ]
   }
   async function copyURL(id?: string) {
-    debugger
     try {
       let url = ''
       if (id) {

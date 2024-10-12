@@ -24,7 +24,7 @@
         type="button"
         title="Add to cart"
         class="w-6 h-6 bg-white px-0.5 py-1 rounded-md fa-solid fa-cart-shopping hover:cursor-pointer"
-        @click.stop="dishStore.copyURL(dish.id)"
+        @click.stop="cartStore.addToCart(dish.id, 1)"
       />
       <button
         data-tooltip-target="cart-tooltip"
@@ -45,10 +45,10 @@
 </template>
 <script setup lang="ts">
 import type { dishType } from '@/shared/types'
-import { useDishStore } from '@/client/stores'
+import { useDishStore, useCartStore } from '@/client/stores'
 
 const dishStore = useDishStore()
-
+const cartStore = useCartStore()
 defineProps({
   dish: {
     type: Object as () => dishType,

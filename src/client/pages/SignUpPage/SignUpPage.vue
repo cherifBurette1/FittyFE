@@ -4,8 +4,8 @@
     @click="$router.go(-1)"
   ></div>
 
-  <section class="grid text-center h-screen items-center bg-gray-50">
-    <div class="bg-white shadow-lg rounded-lg px-8">
+  <section class="grid text-center h-screen items-center">
+    <div class="bg-white rounded-lg px-8">
       <div class="flex justify-center">
         <img src="../../../shared/assets/fittyPNG.png" width="200" height="200" alt="Fitty logo" />
       </div>
@@ -89,7 +89,7 @@
             <input
               id="firstName"
               type="text"
-              v-model="firstName"
+              v-model="signUpModelValues.firstName"
               placeholder="First Name"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
@@ -103,7 +103,7 @@
             <input
               id="lastName"
               type="text"
-              v-model="lastName"
+              v-model="signUpModelValues.lastName"
               placeholder="Last Name"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
@@ -113,7 +113,7 @@
           <div class="mb-4">
             <label class="text-sm mb-2 block text-green-700 font-medium">Gender (optional)</label>
             <select
-              v-model="gender"
+              v-model="signUpModelValues.gender"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             >
               <option value="" disabled selected>Select Gender</option>
@@ -131,7 +131,7 @@
             <input
               id="birthday"
               type="date"
-              v-model="birthday"
+              v-model="signUpModelValues.birthday"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
           </div>
@@ -147,7 +147,7 @@
             <input
               id="address"
               type="text"
-              v-model="address"
+              v-model="signUpModelValues.address"
               placeholder="Address"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
@@ -162,11 +162,14 @@
               id="location"
               type="text"
               disabled
-              v-model="location"
+              v-model="signUpModelValues.location.address"
               placeholder="Choose Location"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
-            <button @click.prevent="openMap" class="flex text-green-600 underline mt-2">
+            <button
+              @click.prevent="authenticationStore.openMap"
+              class="flex text-green-600 underline mt-2"
+            >
               Choose from Maps
             </button>
           </div>
@@ -182,7 +185,7 @@
             <input
               id="email"
               type="email"
-              v-model="email"
+              v-model="signUpModelValues.email"
               placeholder="name@mail.com"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
@@ -195,8 +198,8 @@
             >
             <input
               id="password"
-              :type="isPasswordVisible ? 'text' : 'password'"
-              v-model="password"
+              :type="signUpModelValues.isPasswordVisible ? 'text' : 'password'"
+              v-model="signUpModelValues.password"
               placeholder="********"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
@@ -208,7 +211,7 @@
             >
               <i
                 :class="
-                  isPasswordVisible
+                  signUpModelValues.isPasswordVisible
                     ? 'fas fa-eye-slash text-green-700'
                     : 'fas fa-eye text-green-700'
                 "
@@ -223,8 +226,8 @@
             >
             <input
               id="confirmPassword"
-              :type="isReTypePasswordVisible ? 'text' : 'password'"
-              v-model="confirmPassword"
+              :type="signUpModelValues.isReTypePasswordVisible ? 'text' : 'password'"
+              v-model="signUpModelValues.confirmPassword"
               placeholder="********"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
@@ -236,7 +239,7 @@
             >
               <i
                 :class="
-                  isReTypePasswordVisible
+                  signUpModelValues.isReTypePasswordVisible
                     ? 'fas fa-eye-slash text-green-700'
                     : 'fas fa-eye text-green-700'
                 "
@@ -245,7 +248,12 @@
           </div>
 
           <div class="flex items-center mb-4">
-            <input type="checkbox" v-model="rememberMe" id="rememberMe" class="mr-2" />
+            <input
+              type="checkbox"
+              v-model="signUpModelValues.rememberMe"
+              id="rememberMe"
+              class="mr-2"
+            />
             <label for="rememberMe" class="text-sm text-gray-700">Remember me</label>
           </div>
 
@@ -291,27 +299,21 @@
         </div>
       </form>
     </div>
+    <div v-if="showMap">
+      <MapComponent />
+    </div>
   </section>
 </template>
   
   <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useAuthenticationStore } from '@/client/stores'
+import { MapComponent } from '@/client/components'
+import { storeToRefs } from 'pinia'
 
-const firstName = ref('')
-const lastName = ref('')
-const gender = ref('')
-const birthday = ref('')
-const address = ref('')
-const location = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const rememberMe = ref(false)
-const isPasswordVisible = ref(false)
-const isReTypePasswordVisible = ref(false)
+const authenticationStore = useAuthenticationStore()
+const { showMap, signUpModelValues } = storeToRefs(authenticationStore)
 const step = ref(1)
-
-// Calculate the progress based on the step
 
 // Function to go to the next step
 function previousStep() {
@@ -330,15 +332,11 @@ function nextStep() {
 // Function to toggle password visibility
 function togglePasswordVisibility(reTypePasswordVisible?: boolean) {
   if (reTypePasswordVisible) {
-    isReTypePasswordVisible.value = !isReTypePasswordVisible.value
+    signUpModelValues.value.isReTypePasswordVisible =
+      !signUpModelValues.value.isReTypePasswordVisible
   } else {
-    isPasswordVisible.value = !isPasswordVisible.value
+    signUpModelValues.value.isPasswordVisible = !signUpModelValues.value.isPasswordVisible
   }
-}
-
-// Function to open the map (replace this with actual navigation logic)
-function openMap() {
-  // Logic to open the map page
 }
 
 // Function to handle registration (replace this with actual registration logic)

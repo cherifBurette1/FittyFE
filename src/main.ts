@@ -7,6 +7,7 @@ import App from './App.vue'
 import router from './shared/router'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
+import 'leaflet/dist/leaflet.css'
 
 const options = {
   position: 'bottom-center',

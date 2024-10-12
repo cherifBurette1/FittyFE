@@ -37,4 +37,42 @@ type productComponent = {
   id: string
   name: string
 }
-export type { dishType, categoryType, cartItemType, productDetails }
+type signUpType = {
+  firstName: string
+  lastName: string
+  gender: string
+  birthday: string
+  address: string
+  location: mapInfo
+  email: string
+  password: string
+  confirmPassword: string
+  rememberMe: boolean
+  isPasswordVisible: boolean
+  isReTypePasswordVisible: boolean
+}
+type mapInfo = {
+  lat: number
+  lng: number
+  address: string
+}
+type shippingOptionType = {
+  id: string
+  name: string
+  price: number
+}
+type paymentOptionType = {
+  id: string
+  name: string
+  isActive: boolean
+}
+export type {
+  dishType,
+  categoryType,
+  cartItemType,
+  productDetails,
+  signUpType,
+  mapInfo,
+  shippingOptionType,
+  paymentOptionType
+}

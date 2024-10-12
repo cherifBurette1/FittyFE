@@ -1,12 +1,6 @@
 <template>
   <div class="bg-white text-gray-800">
-    <header class="flex justify-between items-center px-6">
-      <img alt="Fitty logo" class="h-36" src="../../../shared/assets/fittyPNG.png" />
-      <div>
-        <button class="text-gray-600 mr-4">Login</button>
-        <button class="bg-green-600 text-white px-4 py-2 rounded">Sign Up</button>
-      </div>
-    </header>
+    <header-card />
     <div class="px-6">
       <div class="text-center my-12">
         <h1 class="text-4xl font-bold">
@@ -17,9 +11,11 @@
             <input
               type="search"
               placeholder="Search"
+              v-model="searchQuery"
               class="w-full px-5 py-3 text-sm text-gray-800 placeholder-gray-400 border border-gray-300 rounded-full focus:ring-2 focus:ring-green-600 focus:border-green-600 focus:outline-none"
             />
             <div
+              v-if="searchQuery.length == 0"
               type="submit"
               class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600"
             >
@@ -66,7 +62,7 @@
 import { onMounted, ref } from 'vue'
 
 import { storeToRefs } from 'pinia'
-import { FoodCard, CategoryCard, DefaultFooter, Pagination } from '@/client/components'
+import { FoodCard, CategoryCard, DefaultFooter, Pagination, HeaderCard } from '@/client/components'
 import { ProductDetails } from '@/client/views'
 import { useDishStore } from '@/client/stores'
 import { useRouter, useRoute } from 'vue-router'
@@ -74,7 +70,7 @@ import { useRouter, useRoute } from 'vue-router'
 const dishStore = useDishStore()
 const router = useRouter()
 const route = useRoute()
-
+const searchQuery = ref('')
 const { dishes, categories, showProductDetails } = storeToRefs(dishStore)
 onMounted(async () => {
   await dishStore.fetchDishes()

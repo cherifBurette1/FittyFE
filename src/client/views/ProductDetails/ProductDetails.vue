@@ -126,7 +126,7 @@
           </div>
           <button
             class="bg-red-500 text-white px-8 py-4 rounded-full"
-            @click="addToCart(route.query.id?.toString() ?? '', quantity)"
+            @click="addToCart(route.params.id?.toString() ?? '', quantity)"
           >
             Add to cart
           </button>

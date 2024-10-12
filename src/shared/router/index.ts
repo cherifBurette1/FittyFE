@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { HomePage, LoginPage, SearchPage, SignUpPage } from '../../client/pages'
+import { CartPage, HomePage, LoginPage, SearchPage, SignUpPage } from '../../client/pages'
 import { ProductDetails } from '@/client/views'
 
 const router = createRouter({
@@ -41,6 +41,19 @@ const router = createRouter({
         {
           path: '/product/:id',
           name: 'product',
+          component: ProductDetails,
+          props: ({ params }) => ({ id: params.id })
+        }
+      ]
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: CartPage,
+      children: [
+        {
+          path: '/cart/:id',
+          name: 'cartItem',
           component: ProductDetails,
           props: ({ params }) => ({ id: params.id })
         }
