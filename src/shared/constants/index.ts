@@ -1,4 +1,4 @@
-import type { mapInfo, signUpType } from '@/shared/types'
+import type { mapInfo, signInType, signUpType } from '@/shared/types'
 
 export const defaultMapInfo: mapInfo = {
   lat: 0,
@@ -10,6 +10,7 @@ export const signUpValue: signUpType = {
   lastName: '',
   gender: '',
   birthday: '',
+  mobileNumber: '',
   address: '',
   location: defaultMapInfo,
   email: '',
@@ -18,4 +19,8 @@ export const signUpValue: signUpType = {
   rememberMe: false,
   isPasswordVisible: false,
   isReTypePasswordVisible: false
+}
+export const signInValue: signInType = {
+  email: '',
+  password: ''
 }

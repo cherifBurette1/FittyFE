@@ -19,7 +19,7 @@
     <!-- User Navigation -->
     <div class="flex items-center space-x-4">
       <!-- If user is logged in -->
-      <div v-if="true" class="flex items-center space-x-4">
+      <div v-if="userInfo?.username" class="flex items-center space-x-4">
         <div class="h-8 w-8 flex justify-center items-center rounded-full border-2 border-solid">
           <i class="fa-solid fa-user"></i>
         </div>
@@ -47,7 +47,9 @@
         </div>
 
         <!-- Sign Out Button -->
-        <button @click="() => {}" class="text-red-600 hover:text-red-800">Sign Out</button>
+        <button @click="() => authenticationStore.logOut()" class="text-red-600 hover:text-red-800">
+          Sign Out
+        </button>
       </div>
 
       <div v-else>
@@ -64,10 +66,13 @@
 </template>
   
   <script lang="ts" setup>
+import { useAuthenticationStore } from '@/client/stores'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-
+const authenticationStore = useAuthenticationStore()
+const { userInfo } = storeToRefs(authenticationStore)
 // Example notification count - replace this with actual state management
 const notificationCount = 3 // You can manage this state with Pinia or Vuex
 </script>

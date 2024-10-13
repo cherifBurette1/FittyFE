@@ -4,7 +4,7 @@
     <div class="px-6">
       <div class="text-center my-12">
         <h1 class="text-4xl font-bold">
-          {{ route.query.category === 'forYou' ? 'Best for you' : route.query.category }}
+          {{ route.query.name === 'forYou' ? 'Best for you' : route.query.name }}
         </h1>
       </div>
       <search-component />
@@ -23,7 +23,10 @@
           >
           </FoodCard>
         </div>
-        <pagination class="flex justify-center mt-3" />
+        <pagination
+          :categoryId="route.query.category?.toString() ?? ''"
+          class="flex justify-center mt-3"
+        />
         <default-footer />
       </div>
     </div>
@@ -50,6 +53,9 @@ const router = useRouter()
 const route = useRoute()
 const { dishes, categories, showProductDetails } = storeToRefs(dishStore)
 onMounted(async () => {
+  if (!route.query.page) {
+    dishStore.page = 1
+  }
   await dishStore.fetchDishes()
   await dishStore.fetchCategories()
 })

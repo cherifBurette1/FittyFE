@@ -43,7 +43,12 @@ const router = createRouter({
       path: '/all',
       name: 'all',
       component: SearchPage,
-      props: ({ query }) => ({ category: query.category, searchText: query.searchText }),
+      props: ({ query }) => ({
+        category: query.category,
+        searchText: query.searchText,
+        page: query.page,
+        name: query.name
+      }),
       children: [
         {
           path: '/product/:id',

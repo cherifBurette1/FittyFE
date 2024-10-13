@@ -108,7 +108,18 @@
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
           </div>
-
+          <div class="mb-4">
+            <label for="mobileNumber" class="text-sm mb-2 block text-green-700 font-medium"
+              >Mobile Number</label
+            >
+            <input
+              id="mobileNumber"
+              type="text"
+              v-model="signUpModelValues.mobileNumber"
+              placeholder="Phone Number"
+              class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
+            />
+          </div>
           <!-- Gender -->
           <div class="mb-4">
             <label class="text-sm mb-2 block text-green-700 font-medium">Gender (optional)</label>
@@ -247,16 +258,6 @@
             </button>
           </div>
 
-          <div class="flex items-center mb-4">
-            <input
-              type="checkbox"
-              v-model="signUpModelValues.rememberMe"
-              id="rememberMe"
-              class="mr-2"
-            />
-            <label for="rememberMe" class="text-sm text-gray-700">Remember me</label>
-          </div>
-
           <p class="text-sm text-gray-700">
             By continuing, you agree to the
             <a href="#" class="text-green-600 hover:underline">Terms of use</a> and
@@ -291,7 +292,7 @@
           <!-- Sign Up button -->
           <button
             v-if="step === 3"
-            @click.prevent="register"
+            @click.prevent="authenticationStore.register"
             class="w-full py-3 rounded-lg text-white bg-green-600 hover:bg-green-700 transition-all font-bold ml-2"
           >
             Sign Up
@@ -340,8 +341,5 @@ function togglePasswordVisibility(reTypePasswordVisible?: boolean) {
 }
 
 // Function to handle registration (replace this with actual registration logic)
-function register() {
-  // Handle registration logic here
-}
 </script>
   

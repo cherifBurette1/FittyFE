@@ -9,90 +9,21 @@ export const useDishStore = defineStore('dishes', () => {
   const categories = ref<categoryType[]>([])
   const showProductDetails = ref(false)
   const productDetails = ref<productDetails>()
-
-  async function fetchDishes() {
-    dishes.value = [
-      {
-        id: '1',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: true,
-        isAddedToFavorites: true
-      },
-      {
-        id: '2',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: false,
-        isAddedToFavorites: false
-      },
-      {
-        id: '3',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: false,
-        isAddedToFavorites: false
-      },
-      {
-        id: '4',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: false,
-        isAddedToFavorites: false
-      },
-      {
-        id: '5',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: false,
-        isAddedToFavorites: false
-      },
-      {
-        id: '6',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: false,
-        isAddedToFavorites: false
-      },
-      {
-        id: '7',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: false,
-        isAddedToFavorites: false
-      },
-      {
-        id: '8',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: false,
-        isAddedToFavorites: false
-      },
-      {
-        id: '9',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: false,
-        isAddedToFavorites: false
-      },
-      {
-        id: '10',
-        name: 'Pizza',
-        price: '375',
-        rating: '5',
-        isAddedToCart: false,
-        isAddedToFavorites: false
+  const page = ref(1)
+  const pageSize = ref(10)
+  async function fetchDishes(category: string = '') {
+    try {
+      debugger
+      const response = await fetch(
+        `http://localhost:5220/fitty-api/Dish/GetAllDishes?category=${category}&page=${page.value}&pageSize=${pageSize.value}`
+      )
+      if (response.ok) {
+        const data = await response.json()
+        dishes.value = data.dishes
       }
-    ]
+    } catch (error) {
+      throw new Error('Failed to fetch dishes')
+    }
   }
   async function fetchProductDetails(id: string) {
     productDetails.value = {
@@ -122,18 +53,15 @@ export const useDishStore = defineStore('dishes', () => {
     }
   }
   async function fetchCategories() {
-    categories.value = [
-      { id: '1', name: 'Fish', icon: 'fas fa-fish' },
-      { id: '2', name: 'Italian', icon: 'fas fa-pizza-slice' },
-      { id: '3', name: 'Vegan', icon: 'fas fa-leaf' },
-      { id: '4', name: 'Chinese', icon: 'fas fa-utensils' },
-      { id: '5', name: 'Fish', icon: 'fas fa-fish' },
-      { id: '6', name: 'Italian', icon: 'fas fa-pizza-slice' },
-      { id: '7', name: 'Vegan', icon: 'fas fa-leaf' },
-      { id: '8', name: 'Chinese', icon: 'fas fa-utensils' },
-      { id: '9', name: 'Vegan', icon: 'fas fa-leaf' },
-      { id: '10', name: 'Chinese', icon: 'fas fa-utensils' }
-    ]
+    try {
+      const response = await fetch(`http://localhost:5220/fitty-api/Category/GetAllCategories`)
+      if (response.ok) {
+        const data = await response.json()
+        categories.value = data
+      }
+    } catch (error) {
+      throw new Error('Failed to fetch categories')
+    }
   }
   async function copyURL(id?: string) {
     try {
@@ -162,6 +90,8 @@ export const useDishStore = defineStore('dishes', () => {
     fetchProductDetails,
     productDetails,
 
-    copyURL
+    copyURL,
+    page,
+    pageSize
   }
 })

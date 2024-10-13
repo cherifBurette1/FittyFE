@@ -5,13 +5,13 @@
     <!-- Positioned Image to be half outside the card -->
     <img
       alt="pasta logo"
-      src="../../../shared/assets/pastaLogo.png"
-      class="h-48 w-48 object-cover rounded-full absolute -top-12 left-1/2 transform -translate-x-1/2"
+      :src="dish.imageURL"
+      class="h-40 w-40 object-cover rounded-full absolute -top-12 left-1/2 transform -translate-x-1/2"
     />
 
     <!-- Padding added to the top to prevent overlap with the image -->
     <div class="pt-24">
-      <h3 class="text-l font-semibold text-gray-800">{{ dish.name }}</h3>
+      <h3 class="text-l font-semibold text-gray-800 truncate">{{ dish.name }}</h3>
       <p class="text-2xl font-bold">{{ dish.price + ' EGP' }}</p>
       <div class="flex justify-start items-start mt-2">
         <span class="text-yellow-500 text-lg">★★★★★</span>

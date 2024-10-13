@@ -3,6 +3,7 @@ type dishType = {
   name: string
   price: string
   rating: string
+  imageURL: string
   isAddedToCart: boolean
   isAddedToFavorites: boolean
 }
@@ -48,12 +49,17 @@ type signUpType = {
   birthday: string
   address: string
   location: mapInfo
+  mobileNumber: string
   email: string
   password: string
   confirmPassword: string
   rememberMe: boolean
   isPasswordVisible: boolean
   isReTypePasswordVisible: boolean
+}
+type signInType = {
+  email: string
+  password: string
 }
 type mapInfo = {
   lat: number
@@ -86,6 +92,12 @@ type Order = {
   paymentMethod: string
   items: OrderItem[]
 }
+type UserInfo = {
+  username: string
+  userId: string
+  email: string
+  token: string
+}
 export type {
   dishType,
   categoryType,
@@ -95,5 +107,7 @@ export type {
   mapInfo,
   shippingOptionType,
   paymentOptionType,
-  Order
+  Order,
+  signInType,
+  UserInfo
 }

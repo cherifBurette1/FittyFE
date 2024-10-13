@@ -20,6 +20,7 @@
             id="email"
             type="email"
             name="email"
+            v-model="signInModelValues.email"
             placeholder="name@mail.com"
             class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md text-gray-800 focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none transition"
           />
@@ -34,6 +35,7 @@
             id="password"
             :type="isPasswordVisible ? 'text' : 'password'"
             placeholder="********"
+            v-model="signInModelValues.password"
             class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md text-gray-800 focus:ring-2 focus:ring-green-600 focus:border-green-600 outline-none transition"
           />
           <button
@@ -54,6 +56,7 @@
         <button
           class="w-full py-3 rounded-lg text-white bg-green-600 hover:bg-green-700 transition-all font-bold mt-6"
           type="button"
+          @click="authenticationStore.login"
         >
           Login
         </button>
@@ -88,10 +91,14 @@
   
   <script setup lang="ts">
 import { ref } from 'vue'
+import { useAuthenticationStore } from '@/client/stores'
+import { storeToRefs } from 'pinia'
 
+const authenticationStore = useAuthenticationStore()
+const { signInModelValues } = storeToRefs(authenticationStore)
 const isPasswordVisible = ref(false)
 function togglePasswordVisibility() {
-  isPasswordVisible.value = !isPasswordVisible.value // Toggle password visibility
+  isPasswordVisible.value = !isPasswordVisible.value
 }
 </script>
   
