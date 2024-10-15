@@ -38,7 +38,10 @@
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-2xl font-semibold">Best For You</h2>
           <router-link
-            :to="{ name: 'all', query: { category: '671b6d17-9758-462e-8326-98237bef7b10' } }"
+            :to="{
+              name: 'all',
+              query: { name: 'forYou', category: '671b6d17-9758-462e-8326-98237bef7b10' }
+            }"
             class="text-gray-600 underline"
           >
             See All</router-link

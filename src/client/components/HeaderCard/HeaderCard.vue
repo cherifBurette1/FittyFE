@@ -3,7 +3,7 @@
     <!-- Back Arrow -->
     <div
       v-if="router.currentRoute.value.name !== 'home'"
-      class="flex items-center hover:cursor-pointer mr-4"
+      class="flex items-center hover:cursor-pointer"
       @click="$router.go(-1)"
     >
       <i class="fa fa-arrow-left text-gray-600 hover:text-green-600"></i>
@@ -12,7 +12,7 @@
     <!-- Logo -->
     <img
       alt="Fitty logo"
-      :class="['h-12', { ' ml-72': router.currentRoute.value.name !== 'home' }]"
+      :class="['h-12', { ' ml-48': router.currentRoute.value.name !== 'home' }]"
       src="../../../shared/assets/fittyPNG.png"
     />
 

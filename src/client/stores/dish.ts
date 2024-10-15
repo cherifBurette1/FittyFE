@@ -12,6 +12,7 @@ export const useDishStore = defineStore('dishes', () => {
   const productDetails = ref<productDetails>()
   const page = ref(1)
   const pageSize = ref(10)
+  const totalPages = ref(10)
   async function fetchDishes(category: string = 'all') {
     try {
       const response = await fetch(
@@ -20,6 +21,7 @@ export const useDishStore = defineStore('dishes', () => {
       if (response.ok) {
         const data = await response.json()
         dishes.value = data.dishes
+        totalPages.value = data.totalPages
       }
     } catch (error) {
       throw new Error('Failed to fetch dishes')
@@ -132,6 +134,7 @@ export const useDishStore = defineStore('dishes', () => {
     pageSize,
     getAllFavoriteDishes,
     favorites,
+    totalPages,
 
     addToFavorite,
     removeFromFavorite

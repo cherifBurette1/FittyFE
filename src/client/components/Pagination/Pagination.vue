@@ -47,7 +47,7 @@ const { categoryId } = defineProps({
 })
 // Computed properties to get current page and total pages
 const currentPage = computed(() => dishStore.page)
-const totalPages = computed(() => dishStore.pageSize)
+const totalPages = computed(() => dishStore.totalPages)
 
 // Disable buttons if on the first/last page
 const canGoPrevious = computed(() => currentPage.value > 1)
