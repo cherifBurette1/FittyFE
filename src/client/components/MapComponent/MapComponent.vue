@@ -81,8 +81,6 @@ onMounted(async () => {
 
   // Handle current location found event
   map.value.on('locationfound', async (e: any) => {
-    debugger
-    console.log(signUpModelValues.value.location)
     if (!isEqual(signUpModelValues.value.location, defaultMapInfo)) {
       e.latlng.lat = signUpModelValues.value.location.lat
       e.latlng.lng = signUpModelValues.value.location.lng
@@ -110,7 +108,6 @@ onMounted(async () => {
       smoothMoveMarker(marker.value, center) // Smoothly move the marker to the new center
 
       const position = marker.value!.getLatLng() // Get new position of the marker
-      console.log('Marker moved to:', position)
 
       // Perform reverse geocode to get the address from new position
       await authenticationStore.reverseGeocode(position.lat, position.lng)
@@ -129,7 +126,6 @@ onMounted(async () => {
 
   // Listen for search location selection
   map.value.on('geosearch/showlocation', async (result: any) => {
-    console.log('Search Result:', result) // Log the result to see its structure
     const lat = result.location.y
     const lng = result.location.x
     // Reverse geocode to get the address from search result
@@ -152,7 +148,6 @@ onMounted(async () => {
     // Add event listener for when the marker is dragged and dropped
     marker.value.on('dragend', async () => {
       const position = marker.value!.getLatLng() // Get new position of the marker
-      console.log('Marker dropped at:', position)
 
       // Perform reverse geocode to get the address from new position
       await authenticationStore.reverseGeocode(position.lat, position.lng)

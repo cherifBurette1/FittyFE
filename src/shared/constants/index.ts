@@ -3,7 +3,8 @@ import type { mapInfo, signInType, signUpType } from '@/shared/types'
 export const defaultMapInfo: mapInfo = {
   lat: 0,
   lng: 0,
-  address: ''
+  address: '',
+  name: 'Home'
 }
 export const signUpValue: signUpType = {
   firstName: '',

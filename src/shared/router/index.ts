@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {
   CartPage,
+  FavoritePage,
   HomePage,
   LoginPage,
   OrderPage,
@@ -17,17 +18,15 @@ const router = createRouter({
       redirect: '/home'
     },
     {
+      path: '/product/:id',
+      name: 'product',
+      component: ProductDetails,
+      props: ({ params }) => ({ id: params.id })
+    },
+    {
       path: '/home',
       name: 'home',
-      component: HomePage,
-      children: [
-        {
-          path: '/product/:id',
-          name: 'product',
-          component: ProductDetails,
-          props: ({ params }) => ({ id: params.id })
-        }
-      ]
+      component: HomePage
     },
     {
       path: '/login',
@@ -48,15 +47,7 @@ const router = createRouter({
         searchText: query.searchText,
         page: query.page,
         name: query.name
-      }),
-      children: [
-        {
-          path: '/product/:id',
-          name: 'product',
-          component: ProductDetails,
-          props: ({ params }) => ({ id: params.id })
-        }
-      ]
+      })
     },
     {
       path: '/cart',
@@ -75,6 +66,11 @@ const router = createRouter({
       path: '/orders',
       name: 'orders',
       component: OrderPage
+    },
+    {
+      path: '/favorites',
+      name: 'favorites',
+      component: FavoritePage
     }
   ]
 })

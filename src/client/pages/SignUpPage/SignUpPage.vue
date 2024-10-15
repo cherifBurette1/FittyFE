@@ -325,7 +325,6 @@ function previousStep() {
 
 function nextStep() {
   if (step.value < 3) {
-    console.log(step)
     step.value++
   }
 }

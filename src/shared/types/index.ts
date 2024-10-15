@@ -15,17 +15,26 @@ type categoryType = {
 type cartItemType = {
   id: string
   quantity: number
+  price: number
+  description: string
+  imageURL: string
+  name: string
 }
 type productDetails = {
+  id: string
   name: string
   description: string
-  contains: productComponent[]
-  imgURL: string
-  Price: number
-  tags: productTags[]
+  imageURL: string
+  price: number
+  rating: number
+  calories: number
+  weight: number
+  preparationTime: number
+  nature: number
+  dishComponents: string[]
+  Categories: string[]
   isAddedToCart: boolean
   isAddedToFavorites: boolean
-  productNutrients: productNutrients
 }
 type productNutrients = {
   calories: string
@@ -65,11 +74,16 @@ type mapInfo = {
   lat: number
   lng: number
   address: string
+  name: string
 }
 type shippingOptionType = {
   id: string
   name: string
   price: number
+}
+type shippingLocationType = {
+  id: string
+  name: string
 }
 type paymentOptionType = {
   id: string
@@ -86,11 +100,10 @@ type Order = {
   id: number
   date: string
   status: string
-  total: number
-  address: string
-  shippingCompany: string
-  paymentMethod: string
-  items: OrderItem[]
+  totalPrice: number
+  locationName: string
+  shippingName: string
+  paymentName: string
 }
 type UserInfo = {
   username: string
@@ -109,5 +122,6 @@ export type {
   paymentOptionType,
   Order,
   signInType,
-  UserInfo
+  UserInfo,
+  shippingLocationType
 }

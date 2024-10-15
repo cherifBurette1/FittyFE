@@ -32,7 +32,9 @@
           <router-link :to="{ name: 'orders' }" class="text-gray-600 hover:text-green-600"
             >Orders</router-link
           >
-          <a href="/favorites" class="text-gray-600 hover:text-green-600">Favorites</a>
+          <router-link :to="{ name: 'favorites' }" class="text-gray-600 hover:text-green-600"
+            >Favorites</router-link
+          >
         </nav>
 
         <!-- Notification Icon -->

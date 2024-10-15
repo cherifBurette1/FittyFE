@@ -9,7 +9,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
   const showMap = ref(false)
   const toast = useToast()
   const router = useRouter()
-  const tempLocation = ref<mapInfo>({ lat: 0, lng: 0, address: '' })
+  const tempLocation = ref<mapInfo>({ lat: 0, lng: 0, address: '', name: 'Home' })
   const signUpModelValues = ref({ ...signUpValue })
   const signInModelValues = ref({ ...signInValue })
   const userInfo = ref<UserInfo>()
@@ -30,7 +30,6 @@ export const useAuthenticationStore = defineStore('authentication', () => {
     ]
   })
   watch(userInfo, (newValue) => {
-    debugger
     if (newValue) {
       localStorage.setItem('userInfo', JSON.stringify(newValue))
     } else {
@@ -38,7 +37,6 @@ export const useAuthenticationStore = defineStore('authentication', () => {
     }
   })
   async function login() {
-    debugger
     if (!signInModelValues.value.email || !signInModelValues.value.password) {
       toast.error('All fields are required')
       return
@@ -73,7 +71,6 @@ export const useAuthenticationStore = defineStore('authentication', () => {
     }
   }
   async function register() {
-    debugger
     if (!signUpModelValues.value.email || !signUpModelValues.value.password) {
       toast.error('All fields are required')
       return
@@ -97,7 +94,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
           mobileNumber: signUpModelValues.value.mobileNumber,
           locations: [
             {
-              name: signUpModelValues.value.address,
+              name: 'home',
               address: signUpModelValues.value.location.address,
               lat: signUpModelValues.value.location.lat,
               long: signUpModelValues.value.location.lng,
@@ -135,7 +132,8 @@ export const useAuthenticationStore = defineStore('authentication', () => {
         signUpModelValues.value.location = {
           address: data.display_name,
           lat: lat,
-          lng: lng
+          lng: lng,
+          name: 'Home'
         }
       }
     } catch (error) {

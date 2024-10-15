@@ -20,7 +20,6 @@
         </button>
       </div>
       <div v-else>
-        <search-component />
         <!-- Orders list -->
         <div class="space-y-6 border p-6 rounded-lg border-green-100 shadow-lg min-w-full">
           <div
@@ -43,7 +42,7 @@
                 >
                   {{ order.status }}
                 </span>
-                <span class="font-semibold">Total: {{ order.total }} EGP</span>
+                <span class="font-semibold">Total: {{ order.totalPrice }} EGP</span>
                 <i
                   :class="
                     expandedOrders.includes(order.id) ? 'fas fa-chevron-up' : 'fas fa-chevron-down'
@@ -60,27 +59,27 @@
                 <div class="mb-4 p-4 bg-gray-100 rounded-lg border-l-4 border-green-600">
                   <h3 class="font-semibold">Order Details</h3>
                   <p class="text-gray-800">
-                    Shipping Address: <strong>{{ order.address }}</strong>
+                    Shipping Address: <strong>{{ order.locationName }}</strong>
                   </p>
                   <p class="text-gray-800">
-                    Shipping Company: <strong>{{ order.shippingCompany }}</strong>
+                    Shipping Company: <strong>{{ order.shippingName }}</strong>
                   </p>
                   <p class="text-gray-800">
-                    Payment Method: <strong>{{ order.paymentMethod }}</strong>
+                    Payment Method: <strong>{{ order.paymentName }}</strong>
                   </p>
                 </div>
 
                 <!-- Order Items -->
                 <ul class="divide-y divide-gray-200">
                   <li
-                    v-for="item in order.items"
+                    v-for="item in cartStore.cartItems"
                     :key="item.name"
                     class="flex justify-between items-center py-3 hover:bg-green-50 transition-colors duration-200 cursor-pointer"
                     @click="viewProductDetails(item)"
                   >
                     <div class="flex items-center space-x-4">
                       <img
-                        src="../../../shared/assets/pastaLogo.png"
+                        :src="item.imageURL"
                         :alt="item.name"
                         class="w-16 h-16 object-cover rounded-lg"
                       />
@@ -103,11 +102,12 @@
   
   <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useOrderStore } from '@/client/stores'
+import { useOrderStore, useCartStore } from '@/client/stores'
 import { useRouter } from 'vue-router'
 import { HeaderCard, SearchComponent } from '@/client/components'
 
 const orderStore = useOrderStore()
+const cartStore = useCartStore()
 const { orders, fetchOrders } = orderStore
 const router = useRouter()
 

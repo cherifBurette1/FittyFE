@@ -7,13 +7,13 @@ export const useDishStore = defineStore('dishes', () => {
   const toast = useToast()
   const dishes = ref<dishType[]>([])
   const categories = ref<categoryType[]>([])
+  const favorites = ref<dishType[]>([])
   const showProductDetails = ref(false)
   const productDetails = ref<productDetails>()
   const page = ref(1)
   const pageSize = ref(10)
-  async function fetchDishes(category: string = '') {
+  async function fetchDishes(category: string = 'all') {
     try {
-      debugger
       const response = await fetch(
         `http://localhost:5220/fitty-api/Dish/GetAllDishes?category=${category}&page=${page.value}&pageSize=${pageSize.value}`
       )
@@ -26,30 +26,14 @@ export const useDishStore = defineStore('dishes', () => {
     }
   }
   async function fetchProductDetails(id: string) {
-    productDetails.value = {
-      name: 'Noodles',
-      description: 'With extra cheese topping above',
-      contains: [
-        { id: '1', name: 'gluten' },
-        { id: '2', name: 'dairy' }
-      ],
-      imgURL:
-        'https://storage.googleapis.com/a1aa/image/fWikfijDnrly6UPjNoAJZCRMAOYrrZDrl6Ax5NLKXJCDFRjTA.jpg',
-      Price: 375,
-      tags: [
-        { id: '1', color: '#fef08a', name: 'keto' },
-        { id: '1', color: '#00b300', name: 'vegan' },
-        { id: '1', color: '#ef4444', name: 'meat' },
-        { id: '1', color: '#ef4444', name: 'carnivore' }
-      ],
-      productNutrients: {
-        calories: '375KCal',
-        weight: '350gm',
-        nature: 'Chinese',
-        time: '25min'
-      },
-      isAddedToCart: false,
-      isAddedToFavorites: false
+    try {
+      const response = await fetch(`http://localhost:5220/fitty-api/Dish/GetDish?id=${id}`)
+      if (response.ok) {
+        const data = await response.json()
+        productDetails.value = data
+      }
+    } catch (error) {
+      throw new Error('Failed to fetch details')
     }
   }
   async function fetchCategories() {
@@ -78,6 +62,59 @@ export const useDishStore = defineStore('dishes', () => {
       toast.error('Failed to copy link')
     }
   }
+
+  async function getAllFavoriteDishes(userId: string) {
+    try {
+      const response = await fetch(
+        `http://localhost:5220/fitty-api/Favorite/GetAllUserFavorite?userId=${userId}`
+      )
+      if (response.ok) {
+        const data = await response.json()
+        favorites.value = data
+      }
+    } catch (error) {
+      throw new Error('Failed to fetch favorites')
+    }
+  }
+  async function addToFavorite(userId: string, DishId: string) {
+    try {
+      const body = JSON.stringify({ userId: userId, dishId: DishId })
+
+      const response = await fetch('http://localhost:5220/fitty-api/Favorite/AddToFavorite', {
+        method: 'POST', // Use POST to add a favorite
+        headers: {
+          'Content-Type': 'application/json' // Specify that you're sending JSON
+        },
+        body: body // Send the body containing userId and dishId
+      })
+
+      if (response.ok) {
+        toast.success('Added to favorites!')
+      }
+    } catch (error) {
+      throw new Error('Failed to add to favorites')
+    }
+  }
+  async function removeFromFavorite(userId: string, DishId: string) {
+    try {
+      const body = JSON.stringify({ userId: userId, dishId: DishId })
+
+      const response = await fetch('http://localhost:5220/fitty-api/Favorite/RemoveFromFavorite', {
+        method: 'POST', // Use POST to add a favorite
+        headers: {
+          'Content-Type': 'application/json' // Specify that you're sending JSON
+        },
+        body: body // Send the body containing userId and dishId
+      })
+
+      if (response.ok) {
+        toast.success('removed from favorites!')
+        getAllFavoriteDishes(userId)
+      }
+    } catch (error) {
+      throw new Error('Failed to remove from favorites')
+    }
+  }
   return {
     dishes,
     fetchDishes,
@@ -92,6 +129,11 @@ export const useDishStore = defineStore('dishes', () => {
 
     copyURL,
     page,
-    pageSize
+    pageSize,
+    getAllFavoriteDishes,
+    favorites,
+
+    addToFavorite,
+    removeFromFavorite
   }
 })

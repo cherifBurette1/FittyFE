@@ -23,8 +23,8 @@
             <div class="mt-4">
               <p class="font-bold">Contains</p>
               <ul class="list-disc list-inside text-gray-500">
-                <li v-for="contain in productDetails?.contains" :key="contain.id">
-                  {{ contain.name }}
+                <li v-for="contain in productDetails?.dishComponents" :key="contain">
+                  {{ contain }}
                 </li>
               </ul>
             </div>
@@ -35,7 +35,7 @@
             <div class="text-right">
               <p class="text-lg font-bold">Price</p>
               <p class="text-2xl font-bold text-gray-800">
-                {{ productDetails?.Price + 'EGP/plate' }}
+                {{ productDetails?.price + 'EGP/plate' }}
               </p>
             </div>
             <div class="flex mt-10">
@@ -45,7 +45,7 @@
                   alt="A bowl of pasta noodles with vegetables and chili on top"
                   class="rounded-full shadow-lg"
                   height="280"
-                  :src="productDetails?.imgURL"
+                  :src="productDetails?.imageURL"
                   width="290"
                 />
               </div>
@@ -56,25 +56,33 @@
                 <div class="grid grid-cols-2 gap-4 ml-32 mt-10 text-white">
                   <div>
                     <p class="font-bold">Calories</p>
-                    <p>{{ productDetails?.productNutrients.calories }}</p>
+                    <p>{{ productDetails?.calories }}</p>
                   </div>
                   <div>
                     <p class="font-bold">Weight</p>
-                    <p>{{ productDetails?.productNutrients.weight }}</p>
+                    <p>{{ productDetails?.weight }}</p>
                   </div>
                   <div>
                     <p class="font-bold">Nature</p>
-                    <p>{{ productDetails?.productNutrients.nature }}</p>
+                    <p>{{ productDetails?.nature }}</p>
                   </div>
                   <div>
                     <p class="font-bold">Time</p>
-                    <p>{{ productDetails?.productNutrients.time }}</p>
+                    <p>{{ productDetails?.preparationTime }}</p>
                   </div>
                 </div>
 
                 <!-- Heart and Share buttons inside the yellow card at the bottom -->
                 <div class="absolute bottom-2 right-2 flex space-x-2">
-                  <button class="bg-white p-2 rounded-full shadow-md">
+                  <button
+                    class="bg-white p-2 rounded-full shadow-md"
+                    @click="
+                      dishStore.addToFavorite(
+                        authenticationStore.userInfo?.userId ?? '',
+                        productDetails?.id ?? ''
+                      )
+                    "
+                  >
                     <i
                       :class="[
                         'fas fa-heart text-gray-500',
@@ -96,17 +104,28 @@
 
         <div class="mt-8">
           <p class="font-bold">Categories</p>
-          <div class="flex flex-wrap w-[300px] gap-2 mt-2">
+          <div v-if="productDetails?.Categories" class="flex flex-wrap w-[300px] gap-2 mt-2">
             <span
-              v-for="category in productDetails?.tags"
-              :key="category.id"
+              v-for="category in productDetails?.Categories"
+              :key="category"
               :style="{
-                backgroundColor: category.color,
-                color: isColorDark(category.color) ? 'white' : 'black'
+                backgroundColor: 'red',
+                color: isColorDark('red') ? 'white' : 'black'
               }"
               class="px-4 py-2 rounded-full"
             >
-              {{ category.name }}
+              {{ category }}
+            </span>
+          </div>
+          <div v-else class="flex flex-wrap w-[300px] gap-2 mt-2">
+            <span
+              :style="{
+                backgroundColor: 'red',
+                color: 'white'
+              }"
+              class="px-4 py-2 rounded-full"
+            >
+              {{ 'Balanced Diet' }}
             </span>
           </div>
         </div>
@@ -145,18 +164,19 @@
 import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter, useRoute } from 'vue-router'
-import { useDishStore, useCartStore } from '@/client/stores'
+import { useDishStore, useCartStore, useAuthenticationStore } from '@/client/stores'
 
 const router = useRouter()
 const route = useRoute()
 const dishStore = useDishStore()
+const authenticationStore = useAuthenticationStore()
 const quantity = ref(1)
 
 const { productDetails } = storeToRefs(dishStore)
 const { addToCart } = useCartStore()
 
 onMounted(async () => {
-  await dishStore.fetchProductDetails(route.query.id as string)
+  await dishStore.fetchProductDetails(route.params.id as string)
 })
 function isColorDark(hex: string) {
   const color = hex.replace('#', '')

@@ -2,47 +2,23 @@
 import { defineStore } from 'pinia'
 import type { Order } from '@/shared/types'
 import { ref } from 'vue'
+import { useAuthenticationStore } from '@/client/stores'
 
 export const useOrderStore = defineStore('order', () => {
   const orders = ref<Order[]>([]) // Store orders
-
+  const authenticationStore = useAuthenticationStore()
   // Fetch user orders (mock or actual API call)
   const fetchOrders = async () => {
     try {
-      // Replace with actual API call or mock data
-      const response = [
-        {
-          id: 1,
-          date: '2024-10-01',
-          status: 'Delivered',
-          address: 'Home',
-          shippingCompany: 'Marsool',
-          paymentMethod: 'Cash',
-          total: 150,
-          items: [
-            { name: 'Pasta', quantity: 2, price: 50 },
-            { name: 'Pizza', quantity: 1, price: 50 }
-          ]
-        },
-        {
-          id: 2,
-          date: '2024-10-01',
-          status: 'Delivered',
-          address: 'Home',
-          shippingCompany: 'Marsool',
-          paymentMethod: 'Cash',
-          total: 150,
-          items: [
-            { name: 'Pasta', quantity: 2, price: 50 },
-            { name: 'Pizza', quantity: 1, price: 50 }
-          ]
-        }
-        // Add more orders
-      ]
-      orders.value = response
+      const response = await fetch(
+        `http://localhost:5220/fitty-api/Order/GetAllUsersOrders?userId=${authenticationStore.userInfo?.userId}`
+      )
+      if (response.ok) {
+        const data = await response.json()
+        orders.value = data
+      }
     } catch (error) {
-      console.error('Failed to fetch orders', error)
-    } finally {
+      throw new Error('Failed to fetch orders')
     }
   }
 

@@ -37,7 +37,11 @@
           'w-6 h-6 bg-white p-1 fa-solid fa-heart rounded-md hover:cursor-pointer flex justify-center items-center',
           { ' text-red-500': dish.isAddedToFavorites }
         ]"
-        @click.stop="dishStore.copyURL(dish.id)"
+        @click.stop="
+          isFavorite
+            ? dishStore.removeFromFavorite(authenticationStore.userInfo?.userId ?? '', dish.id)
+            : dishStore.addToFavorite(authenticationStore.userInfo?.userId ?? '', dish.id)
+        "
       />
       <button
         data-tooltip-target="cart-tooltip"
@@ -51,14 +55,19 @@
 </template>
 <script setup lang="ts">
 import type { dishType } from '@/shared/types'
-import { useDishStore, useCartStore } from '@/client/stores'
+import { useDishStore, useCartStore, useAuthenticationStore } from '@/client/stores'
 
 const dishStore = useDishStore()
 const cartStore = useCartStore()
+const authenticationStore = useAuthenticationStore()
 defineProps({
   dish: {
     type: Object as () => dishType,
     required: true
+  },
+  isFavorite: {
+    type: Boolean,
+    required: false
   }
 })
 </script>

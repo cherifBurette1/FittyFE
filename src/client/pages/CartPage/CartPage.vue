@@ -42,11 +42,11 @@
             >
               <div class="flex w-2/5">
                 <div class="w-24">
-                  <img class="h-24" src="../../../shared//assets/pastaLogo.png" alt="Dish image" />
+                  <img class="h-24" :src="item.imageURL" alt="Dish image" />
                 </div>
                 <div class="flex flex-col justify-center ml-4">
-                  <span class="font-bold text-sm">{{ getDishName(item.id) }}</span>
-                  <span class="text-red-500 text-xs">{{ getDishBrand(item.id) }}</span>
+                  <span class="font-bold text-sm">{{ item.name }}</span>
+                  <span class="text-red-500 text-xs">{{ item.description }}</span>
                 </div>
               </div>
               <div class="flex justify-center w-1/5">
@@ -71,11 +71,9 @@
                   </svg>
                 </button>
               </div>
+              <span class="text-center w-1/5 font-semibold text-sm">{{ item.price }} EGP</span>
               <span class="text-center w-1/5 font-semibold text-sm"
-                >{{ getDishPrice(item.id) }} EGP</span
-              >
-              <span class="text-center w-1/5 font-semibold text-sm"
-                >{{ (getDishPrice(item.id) * item.quantity).toFixed(2) }} EGP</span
+                >{{ (item.price * item.quantity).toFixed(2) }} EGP</span
               >
               <button
                 @click="removeFromCart(item.id)"
@@ -93,7 +91,10 @@
           </div>
           <div>
             <label class="font-medium inline-block mb-3 text-sm uppercase">Shipping</label>
-            <select class="block p-2 text-gray-600 w-full text-sm">
+            <select
+              class="block p-2 text-gray-600 w-full text-sm"
+              v-model="cartStore.selectedShippingOption"
+            >
               <option v-for="item in cartStore.shippingOptions" :key="item.id">
                 {{ item.name + ' - ' + item.price + ' EGP' }}
               </option>
@@ -168,11 +169,11 @@
             >
               <option value="" disabled>Select an address</option>
               <option
-                v-for="(address, index) in authenticationStore.userData.addresses"
+                v-for="(address, index) in cartStore.shippingLocations"
                 :key="index"
                 :value="address.id"
               >
-                {{ address.address }}
+                {{ address.name }}
               </option>
             </select>
           </div>
@@ -204,6 +205,7 @@
             <button
               :disabled="cartItems.length === 0"
               class="disabled:opacity-50 bg-green-600 font-semibold hover:bg-green-700 py-3 text-sm text-white uppercase w-full rounded-lg"
+              @click="cartStore.submitOrder(totalPrice)"
             >
               Checkout
             </button>
@@ -222,42 +224,21 @@ import { useCartStore, useDishStore, useAuthenticationStore } from '@/client/sto
 const cartStore = useCartStore()
 const authenticationStore = useAuthenticationStore()
 const dishStore = useDishStore()
-const { cartItems } = storeToRefs(cartStore)
+const { cartItems, cookingInstructions, deliveryInstructions } = storeToRefs(cartStore)
 const { dishes } = storeToRefs(dishStore)
-const cookingInstructions = ref('')
-const deliveryInstructions = ref('')
+
 onMounted(async () => {
+  await cartStore.getCartItems()
   await cartStore.getShippingOptions()
   await cartStore.getPaymentOptions()
+  await cartStore.getShippingLocations(authenticationStore.userInfo?.userId ?? '')
 })
 // Compute total price of items in cart
 const totalPrice = computed(() => {
   return cartItems.value.reduce((total, item) => {
-    const dish = dishes.value.find((dish) => dish.id === item.id)
-    return dish ? total + parseFloat(dish.price) * item.quantity : total
+    return total + item.price * item.quantity
   }, 0)
 })
-
-// Helper functions to get dish details from the store
-const getDishName = (id: string) => {
-  const dish = dishes.value.find((dish) => dish.id === id)
-  return dish ? dish.name : 'Unknown'
-}
-
-const getDishBrand = (id: string) => {
-  const dish = dishes.value.find((dish) => dish.id === id)
-  return dish ? dishStore.productDetails?.description : ''
-}
-
-const getDishImage = (id: string) => {
-  const dish = dishes.value.find((dish) => dish.id === id)
-  return '../../../shared/assets/pastaLogo.png' // Replace with a default image URL
-}
-
-const getDishPrice = (id: string) => {
-  const dish = dishes.value.find((dish) => dish.id === id)
-  return dish ? dish.price : '0'
-}
 
 // Remove item from the cart
 const removeFromCart = (id: string) => {
