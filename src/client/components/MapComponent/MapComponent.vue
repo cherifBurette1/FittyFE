@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import L from 'leaflet'
 import 'leaflet-geosearch/dist/geosearch.css'
@@ -201,4 +201,11 @@ function smoothMoveMarker(marker: L.Marker, targetPosition: L.LatLng) {
 
   animate() // Start the animation
 }
+onUnmounted(() => {
+  if (map.value) {
+    map.value.off() // Remove all event listeners
+    map.value.remove() // Completely remove the map instance
+    map.value = null // Clear the map reference
+  }
+})
 </script>
