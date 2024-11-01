@@ -14,7 +14,7 @@
         <p class="text-gray-600">Looks like you haven't bought anything yet.</p>
         <button
           class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
-          @click="$router.go(-1)"
+          @click="$router.push('/home')"
         >
           Continue Shopping
         </button>
@@ -105,17 +105,19 @@ import { onMounted, ref } from 'vue'
 import { useOrderStore, useCartStore } from '@/client/stores'
 import { useRouter } from 'vue-router'
 import { HeaderCard, SearchComponent } from '@/client/components'
+import { storeToRefs } from 'pinia'
 
 const orderStore = useOrderStore()
 const cartStore = useCartStore()
-const { orders, fetchOrders } = orderStore
+const { orders } = storeToRefs(orderStore)
 const router = useRouter()
 
 const expandedOrders = ref<number[]>([])
 
 onMounted(async () => {
-  await fetchOrders()
-  expandedOrders.value = [...orders.map((order) => order.id)]
+  await orderStore.fetchOrders()
+  debugger
+  expandedOrders.value = [...orders.value.map((order) => order.id)]
 })
 
 function toggleOrderItems(orderId: number) {

@@ -2,22 +2,37 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { dishType, categoryType, productDetails } from '@/shared/types'
 import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
+import { useAuthenticationStore } from './authentication'
 
 export const useDishStore = defineStore('dishes', () => {
   const toast = useToast()
+  const router = useRouter()
   const dishes = ref<dishType[]>([])
   const categories = ref<categoryType[]>([])
+  const authenticationStore = useAuthenticationStore()
   const favorites = ref<dishType[]>([])
   const showProductDetails = ref(false)
   const productDetails = ref<productDetails>()
   const page = ref(1)
   const pageSize = ref(10)
   const totalPages = ref(10)
+  const searchText = ref('')
   async function fetchDishes(category: string = 'all') {
     try {
       const response = await fetch(
-        `http://localhost:5220/fitty-api/Dish/GetAllDishes?category=${category}&page=${page.value}&pageSize=${pageSize.value}`
+        `http://localhost:5220/fitty-api/Dish/GetAllDishes?category=${category}&page=${page.value}&pageSize=${pageSize.value}&searchText=${searchText.value}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + authenticationStore.userInfo?.token
+          }
+        }
       )
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
+      }
       if (response.ok) {
         const data = await response.json()
         dishes.value = data.dishes
@@ -29,7 +44,16 @@ export const useDishStore = defineStore('dishes', () => {
   }
   async function fetchProductDetails(id: string) {
     try {
-      const response = await fetch(`http://localhost:5220/fitty-api/Dish/GetDish?id=${id}`)
+      const response = await fetch(`http://localhost:5220/fitty-api/Dish/GetDish?id=${id}`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + authenticationStore.userInfo?.token
+        }
+      })
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
+      }
       if (response.ok) {
         const data = await response.json()
         productDetails.value = data
@@ -40,7 +64,16 @@ export const useDishStore = defineStore('dishes', () => {
   }
   async function fetchCategories() {
     try {
-      const response = await fetch(`http://localhost:5220/fitty-api/Category/GetAllCategories`)
+      const response = await fetch(`http://localhost:5220/fitty-api/Category/GetAllCategories`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + authenticationStore.userInfo?.token
+        }
+      })
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
+      }
       if (response.ok) {
         const data = await response.json()
         categories.value = data
@@ -68,8 +101,18 @@ export const useDishStore = defineStore('dishes', () => {
   async function getAllFavoriteDishes(userId: string) {
     try {
       const response = await fetch(
-        `http://localhost:5220/fitty-api/Favorite/GetAllUserFavorite?userId=${userId}`
+        `http://localhost:5220/fitty-api/Favorite/GetAllUserFavorite?userId=${userId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + authenticationStore.userInfo?.token
+          }
+        }
       )
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
+      }
       if (response.ok) {
         const data = await response.json()
         favorites.value = data
@@ -85,11 +128,15 @@ export const useDishStore = defineStore('dishes', () => {
       const response = await fetch('http://localhost:5220/fitty-api/Favorite/AddToFavorite', {
         method: 'POST', // Use POST to add a favorite
         headers: {
-          'Content-Type': 'application/json' // Specify that you're sending JSON
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authenticationStore.userInfo?.token
         },
         body: body // Send the body containing userId and dishId
       })
-
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
+      }
       if (response.ok) {
         toast.success('Added to favorites!')
       }
@@ -104,11 +151,15 @@ export const useDishStore = defineStore('dishes', () => {
       const response = await fetch('http://localhost:5220/fitty-api/Favorite/RemoveFromFavorite', {
         method: 'POST', // Use POST to add a favorite
         headers: {
-          'Content-Type': 'application/json' // Specify that you're sending JSON
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authenticationStore.userInfo?.token
         },
         body: body // Send the body containing userId and dishId
       })
-
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
+      }
       if (response.ok) {
         toast.success('removed from favorites!')
         getAllFavoriteDishes(userId)
@@ -137,6 +188,7 @@ export const useDishStore = defineStore('dishes', () => {
     totalPages,
 
     addToFavorite,
-    removeFromFavorite
+    removeFromFavorite,
+    searchText
   }
 })

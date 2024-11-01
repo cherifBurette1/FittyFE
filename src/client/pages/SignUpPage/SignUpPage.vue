@@ -93,6 +93,7 @@
               placeholder="First Name"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
+            <span class="text-red-600 text-sm">{{ errors.firstName }}</span>
           </div>
 
           <!-- Last Name -->
@@ -107,6 +108,7 @@
               placeholder="Last Name"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
+            <span class="text-red-600 text-sm">{{ errors.lastName }}</span>
           </div>
           <div class="mb-4">
             <label for="mobileNumber" class="text-sm mb-2 block text-green-700 font-medium"
@@ -119,6 +121,7 @@
               placeholder="Phone Number"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
+            <span class="text-red-600 text-sm">{{ errors.mobileNumber }}</span>
           </div>
           <!-- Gender -->
           <div class="mb-4">
@@ -162,6 +165,7 @@
               placeholder="Address"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
+            <span class="text-red-600 text-sm">{{ errors.address }}</span>
           </div>
 
           <!-- Location -->
@@ -183,6 +187,7 @@
             >
               Choose from Maps
             </button>
+            <span class="text-red-600 text-sm">{{ errors.location }}</span>
           </div>
         </div>
 
@@ -200,6 +205,7 @@
               placeholder="name@mail.com"
               class="w-full h-12 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-200"
             />
+            <span class="text-red-600 text-sm">{{ errors.email }}</span>
           </div>
 
           <!-- Password -->
@@ -228,6 +234,7 @@
                 "
               ></i>
             </button>
+            <span class="text-red-600 text-sm">{{ errors.password }}</span>
           </div>
 
           <!-- Retype Password -->
@@ -256,6 +263,7 @@
                 "
               ></i>
             </button>
+            <span class="text-red-600 text-sm">{{ errors.confirmPassword }}</span>
           </div>
 
           <p class="text-sm text-gray-700">
@@ -292,7 +300,7 @@
           <!-- Sign Up button -->
           <button
             v-if="step === 3"
-            @click.prevent="authenticationStore.register"
+            @click.prevent="nextStep"
             class="w-full py-3 rounded-lg text-white bg-green-600 hover:bg-green-700 transition-all font-bold ml-2"
           >
             Sign Up
@@ -315,7 +323,69 @@ import { storeToRefs } from 'pinia'
 const authenticationStore = useAuthenticationStore()
 const { showMap, signUpModelValues } = storeToRefs(authenticationStore)
 const step = ref(1)
+const errors = ref({
+  firstName: '',
+  lastName: '',
+  mobileNumber: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  address: '',
+  location: ''
+})
+const egyptianPhoneRegex = /^(010|011|012|015)\d{8}$/
 
+function validateStep1() {
+  let valid = true
+  errors.value.firstName = signUpModelValues.value.firstName ? '' : 'First Name is required'
+  errors.value.lastName = signUpModelValues.value.lastName ? '' : 'Last Name is required'
+  if (!signUpModelValues.value.mobileNumber) {
+    errors.value.mobileNumber = 'Mobile Number is required'
+    valid = false
+  } else if (!egyptianPhoneRegex.test(signUpModelValues.value.mobileNumber)) {
+    errors.value.mobileNumber = 'Mobile Number must be a valid Egyptian number'
+    valid = false
+  } else {
+    errors.value.mobileNumber = ''
+  }
+  return valid
+}
+function validateStep2() {
+  let valid = true
+  if (signUpModelValues.value.address.length < 1) {
+    errors.value.address = 'Address is required'
+    valid = false
+  }
+  if (signUpModelValues.value.location.lat === 0 || signUpModelValues.value.location.lng === 0) {
+    errors.value.location = 'Location is required'
+    valid = false
+  }
+  return valid
+}
+function validateStep3() {
+  debugger
+  let valid = true
+  errors.value.email = signUpModelValues.value.email ? '' : 'Email is required'
+  errors.value.password = signUpModelValues.value.password ? '' : 'Password is required'
+  errors.value.confirmPassword =
+    signUpModelValues.value.confirmPassword === signUpModelValues.value.password
+      ? ''
+      : 'Passwords do not match'
+
+  if (
+    !signUpModelValues.value.email ||
+    !signUpModelValues.value.password ||
+    errors.value.confirmPassword
+  ) {
+    valid = false
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(signUpModelValues.value.email)) {
+    errors.value.email = 'Please enter a valid email'
+    valid = false
+  }
+  return valid
+}
 // Function to go to the next step
 function previousStep() {
   if (step.value > 1) {
@@ -324,8 +394,13 @@ function previousStep() {
 }
 
 function nextStep() {
-  if (step.value < 3) {
+  debugger
+  if (step.value === 1 && validateStep1()) {
     step.value++
+  } else if (step.value === 2 && validateStep2()) {
+    step.value++
+  } else if (step.value === 3 && validateStep3()) {
+    authenticationStore.register()
   }
 }
 

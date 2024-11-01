@@ -13,22 +13,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
   const signUpModelValues = ref({ ...signUpValue })
   const signInModelValues = ref({ ...signInValue })
   const userInfo = ref<UserInfo>()
-  const userData = ref({
-    addresses: [
-      {
-        id: '1',
-        address: 'test 1',
-        lat: 0,
-        lng: 0
-      },
-      {
-        id: '2',
-        address: 'test 2',
-        lat: 0,
-        lng: 0
-      }
-    ]
-  })
+
   watch(userInfo, (newValue) => {
     if (newValue) {
       localStorage.setItem('userInfo', JSON.stringify(newValue))
@@ -47,7 +32,8 @@ export const useAuthenticationStore = defineStore('authentication', () => {
       const response = await fetch('http://localhost:5220/fitty-api/Users/LoginUser', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + userInfo.value?.token
         },
         body: JSON.stringify({
           email: signInModelValues.value.email,
@@ -57,7 +43,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
 
       if (!response.ok) {
         const errorData = await response.json()
-        toast.error(errorData.message)
+        toast.error(errorData[0])
         return
       }
       const data = await response.json()
@@ -81,7 +67,8 @@ export const useAuthenticationStore = defineStore('authentication', () => {
       const response = await fetch('http://localhost:5220/fitty-api/Users/CreateUser', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + userInfo.value?.token
         },
         body: JSON.stringify({
           email: signUpModelValues.value.email,
@@ -103,10 +90,11 @@ export const useAuthenticationStore = defineStore('authentication', () => {
           ]
         })
       })
+      debugger
 
       if (!response.ok) {
         const errorData = await response.json()
-        toast.error(errorData.message)
+        toast.error(errorData[0])
         return
       }
 
@@ -116,8 +104,7 @@ export const useAuthenticationStore = defineStore('authentication', () => {
 
       router.push('login') // Example redirect to login page
     } catch (error) {
-      // Handle any unexpected errors
-      console.error('Registration error:', error)
+      debugger
       toast.error('An unexpected error occurred. Please try again.')
     }
   }
@@ -161,8 +148,6 @@ export const useAuthenticationStore = defineStore('authentication', () => {
 
     openMap,
     exitMap,
-
-    userData,
     register,
     login,
     signInModelValues,

@@ -4,7 +4,7 @@
     <div
       v-if="router.currentRoute.value.name !== 'home'"
       class="flex items-center hover:cursor-pointer"
-      @click="$router.go(-1)"
+      @click="$router.push('/home')"
     >
       <i class="fa fa-arrow-left text-gray-600 hover:text-green-600"></i>
     </div>
@@ -12,8 +12,12 @@
     <!-- Logo -->
     <img
       alt="Fitty logo"
-      :class="['h-12', { ' ml-48': router.currentRoute.value.name !== 'home' }]"
+      :class="[
+        'h-12 hover:cursor-pointer',
+        { ' ml-48': router.currentRoute.value.name !== 'home' }
+      ]"
       src="../../../shared/assets/fittyPNG.png"
+      @click="$router.push({ name: 'home' })"
     />
 
     <!-- User Navigation -->
@@ -37,7 +41,7 @@
           >
         </nav>
 
-        <!-- Notification Icon -->
+        <!-- Notification Icon
         <div class="relative">
           <i class="fas fa-bell text-xl text-gray-600 hover:text-green-600"></i>
           <span
@@ -46,7 +50,7 @@
           >
             {{ notificationCount }}
           </span>
-        </div>
+        </div> -->
 
         <!-- Sign Out Button -->
         <button @click="() => authenticationStore.logOut()" class="text-red-600 hover:text-red-800">

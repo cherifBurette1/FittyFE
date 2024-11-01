@@ -29,7 +29,7 @@
             <p class="text-gray-600">Looks like you haven't added anything yet.</p>
             <button
               class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
-              @click="$router.go(-1)"
+              @click="$router.push('/home')"
             >
               Continue Shopping
             </button>
@@ -177,7 +177,7 @@
               </option>
             </select>
           </div>
-          <div class="py-10">
+          <!-- <div class="py-10">
             <label for="promo" class="font-semibold inline-block mb-3 text-sm uppercase"
               >Promo Code</label
             >
@@ -196,7 +196,7 @@
             @click="applyPromoCode($event.toString())"
           >
             Apply
-          </button>
+          </button> -->
           <div class="border-t mt-8">
             <div class="flex font-semibold justify-between py-6 text-sm uppercase">
               <span>Total cost</span>
@@ -205,7 +205,7 @@
             <button
               :disabled="cartItems.length === 0"
               class="disabled:opacity-50 bg-green-600 font-semibold hover:bg-green-700 py-3 text-sm text-white uppercase w-full rounded-lg"
-              @click="cartStore.submitOrder(totalPrice)"
+              @click="submitOrder(totalPrice)"
             >
               Checkout
             </button>
@@ -219,9 +219,11 @@
 import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { HeaderCard } from '@/client/components'
+import { useRouter } from 'vue-router'
 import { useCartStore, useDishStore, useAuthenticationStore } from '@/client/stores'
 
 const cartStore = useCartStore()
+const router = useRouter()
 const authenticationStore = useAuthenticationStore()
 const dishStore = useDishStore()
 const { cartItems, cookingInstructions, deliveryInstructions } = storeToRefs(cartStore)
@@ -261,6 +263,10 @@ const proceedToCheckout = () => {
 }
 function applyPromoCode(value: string) {
   cartStore.promo = value
+}
+function submitOrder(totalPrice: number) {
+  cartStore.submitOrder(totalPrice)
+  router.push('/orders')
 }
 </script>
   

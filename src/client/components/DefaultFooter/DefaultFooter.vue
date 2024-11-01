@@ -22,25 +22,35 @@
       </div>
       <div class="flex justify-between items-center mb-6">
         <div>
-          <h3 class="text-lg font-semibold mb-2">Get Exclusive Deals in your Inbox</h3>
-          <div class="flex">
+          <!-- <h3 class="text-lg font-semibold mb-2">Get Exclusive Deals in your Inbox</h3> -->
+          <!-- <div class="flex">
             <input
               class="p-2 border border-gray-300 rounded-l"
               placeholder="your@email.com"
               type="email"
             />
             <button class="bg-green-600 text-white px-4 py-2 rounded-r">Subscribe</button>
-          </div>
+          </div> -->
         </div>
         <div class="flex space-x-4">
-          <a class="bg-black text-white px-4 py-2 rounded" href="#"> App Store </a>
-          <a class="bg-black text-white px-4 py-2 rounded" href="#"> Google Play </a>
+          <a
+            class="bg-black text-white px-4 py-2 rounded hover:cursor-pointer"
+            @click="toast.error('This service is not available')"
+          >
+            App Store
+          </a>
+          <a
+            class="bg-black text-white px-4 py-2 rounded hover:cursor-pointer"
+            @click="toast.error('This service is not available')"
+          >
+            Google Play
+          </a>
         </div>
       </div>
       <div class="flex justify-between items-center">
         <div class="text-gray-600">
-          <p>Company © 2024. All rights reserved.</p>
-          <p>House of companies</p>
+          <p>Fitty © 2024. All rights reserved.</p>
+          <p>Sherif ElGazzar</p>
         </div>
         <div class="flex space-x-4">
           <a class="text-gray-600" href="#"> Privacy Policy </a>
@@ -52,3 +62,7 @@
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import { useToast } from 'vue-toastification'
+const toast = useToast()
+</script>

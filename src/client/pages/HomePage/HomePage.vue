@@ -1,5 +1,19 @@
 <template>
-  <div class="bg-white text-gray-800">
+  <div
+    v-if="userInfo?.username.includes('admin')"
+    class="flex flex-col items-center justify-center min-h-[70vh] text-center text-gray-500 space-y-4"
+  >
+    <i class="fas fa-shop-slash text-8xl text-gray-300 animate__animated animate__bounceIn"></i>
+    <p class="text-lg font-semibold">Admins are not allowed here.</p>
+    <p class="text-gray-600">Please use postman instead</p>
+    <button
+      class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
+      @click="$router.push('/login')"
+    >
+      Sign Out
+    </button>
+  </div>
+  <div v-else class="bg-white text-gray-800">
     <header-card />
     <div class="px-6">
       <div class="text-center my-12">

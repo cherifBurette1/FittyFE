@@ -67,7 +67,7 @@
         </div>
 
         <!-- Google Sign In Button -->
-        <button
+        <!-- <button
           class="w-full mt-6 py-3 flex items-center justify-center gap-2 border border-gray-400 rounded-lg text-gray-800 hover:bg-gray-100 transition-all"
           type="button"
         >
@@ -77,12 +77,12 @@
             class="h-6 w-6"
           />
           Sign in with Google
-        </button>
+        </button> -->
 
         <!-- Create Account Link -->
         <p class="mt-4 text-sm text-gray-700 text-center">
           Not registered?
-          <a href="#" class="text-green-600 hover:underline">Create account</a>
+          <div class="text-green-600 hover:underline cursor-pointer" @click="$router.push({ name: 'signUp' })" >Create account</div>
         </p>
       </form>
     </div>

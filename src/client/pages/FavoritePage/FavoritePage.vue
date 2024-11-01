@@ -7,7 +7,21 @@
           {{ 'Favorites' }}
         </h1>
       </div>
-      <div class="my-12">
+      <div
+        v-if="favorites.length === 0"
+        class="flex flex-col items-center justify-center min-h-[70vh] text-center text-gray-500 space-y-4"
+      >
+        <i class="fas fa-shop-slash text-8xl text-gray-300 animate__animated animate__bounceIn"></i>
+        <p class="text-lg font-semibold">You don't have any available favorites.</p>
+        <p class="text-gray-600">Looks like you haven't added anything yet.</p>
+        <button
+          class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
+          @click="$router.push('/home')"
+        >
+          Continue Shopping
+        </button>
+      </div>
+      <div v-else class="my-12">
         <div class="flex flex-wrap justify-center gap-12 p-6 mt-4">
           <FoodCard
             v-for="dish in favorites"

@@ -7,6 +7,7 @@ import type {
   shippingLocationType,
   shippingOptionType
 } from '@/shared/types'
+import { useRouter } from 'vue-router'
 import { useAuthenticationStore } from '@/client/stores'
 
 export const useCartStore = defineStore('cart', () => {
@@ -17,6 +18,7 @@ export const useCartStore = defineStore('cart', () => {
   const paymentOptions = ref<paymentOptionType[]>([])
   const selectedPaymentOption = ref<string | null>(null)
   const toast = useToast()
+  const router = useRouter()
   const selectedAddressId = ref<string | null>(null)
   const promo = ref<string | null>(null)
   const cookingInstructions = ref('')
@@ -43,6 +45,10 @@ export const useCartStore = defineStore('cart', () => {
         getCartItems()
         toast.success('Added to cart!')
       }
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
+      }
     } catch (error) {
       throw new Error('Failed to add to cart')
     }
@@ -57,7 +63,8 @@ export const useCartStore = defineStore('cart', () => {
       const response = await fetch('http://localhost:5220/fitty-api/Cart/RemoveCartItem', {
         method: 'POST', // Use POST to add a favorite
         headers: {
-          'Content-Type': 'application/json' // Specify that you're sending JSON
+          'Content-Type': 'application/json', // Specify that you're sending JSON
+          Authorization: 'Bearer ' + authenticationStore.userInfo?.token
         },
         body: body // Send the body containing userId and dishId
       })
@@ -65,6 +72,10 @@ export const useCartStore = defineStore('cart', () => {
       if (response.ok) {
         getCartItems()
         toast.success('Removed from cart!')
+      }
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
       }
     } catch (error) {
       throw new Error('Failed to add to cart')
@@ -80,10 +91,19 @@ export const useCartStore = defineStore('cart', () => {
   }
   async function getShippingOptions() {
     try {
-      const response = await fetch(`http://localhost:5220/fitty-api/Cart/GetShippingProviders`)
+      const response = await fetch(`http://localhost:5220/fitty-api/Cart/GetShippingProviders`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + authenticationStore.userInfo?.token
+        }
+      })
       if (response.ok) {
         const data = await response.json()
         shippingOptions.value = data
+      }
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
       }
     } catch (error) {
       throw new Error('Failed to fetch shipping providers')
@@ -92,8 +112,18 @@ export const useCartStore = defineStore('cart', () => {
   async function getShippingLocations(userId: string) {
     try {
       const response = await fetch(
-        `http://localhost:5220/fitty-api/Cart/GetUserLocations?userId=${userId}`
+        `http://localhost:5220/fitty-api/Cart/GetUserLocations?userId=${userId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + authenticationStore.userInfo?.token
+          }
+        }
       )
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
+      }
       if (response.ok) {
         const data = await response.json()
         shippingLocations.value = data
@@ -104,10 +134,19 @@ export const useCartStore = defineStore('cart', () => {
   }
   async function getPaymentOptions() {
     try {
-      const response = await fetch(`http://localhost:5220/fitty-api/Cart/GetPaymentOptions`)
+      const response = await fetch(`http://localhost:5220/fitty-api/Cart/GetPaymentOptions`, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + authenticationStore.userInfo?.token
+        }
+      })
       if (response.ok) {
         const data = await response.json()
         paymentOptions.value = data
+      }
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
       }
     } catch (error) {
       throw new Error('Failed to fetch payment options')
@@ -116,8 +155,18 @@ export const useCartStore = defineStore('cart', () => {
   async function getCartItems() {
     try {
       const response = await fetch(
-        `http://localhost:5220/fitty-api/Cart/GetAllCartItems?userId=${authenticationStore.userInfo?.userId}`
+        `http://localhost:5220/fitty-api/Cart/GetAllCartItems?userId=${authenticationStore.userInfo?.userId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer ' + authenticationStore.userInfo?.token
+          }
+        }
       )
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
+      }
       if (response.ok) {
         const data = await response.json()
         cartItems.value = data
@@ -152,13 +201,18 @@ export const useCartStore = defineStore('cart', () => {
       const response = await fetch('http://localhost:5220/fitty-api/Order/AddOrder', {
         method: 'POST', // Use POST to add a favorite
         headers: {
-          'Content-Type': 'application/json' // Specify that you're sending JSON
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authenticationStore.userInfo?.token
         },
         body: body // Send the body containing userId and dishId
       })
       if (response.ok) {
         const data = await response.json()
         toast.success('order placed Successfully!')
+      }
+      if (response.status === 401) {
+        toast.info('please login to access this page')
+        router.push({ name: 'login' })
       }
     } catch (error) {
       throw new Error('Failed to fetch payment options')
@@ -181,7 +235,7 @@ export const useCartStore = defineStore('cart', () => {
     getCartItems,
     cookingInstructions,
     deliveryInstructions,
-    submitOrder,
-    selectedShippingOption
+    selectedShippingOption,
+    submitOrder
   }
 })

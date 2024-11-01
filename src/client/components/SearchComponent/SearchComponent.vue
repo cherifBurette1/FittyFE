@@ -4,11 +4,11 @@
       <input
         type="search"
         placeholder="Search"
-        v-model="searchQuery"
+        v-model="dishStore.searchText"
         class="w-full px-5 py-3 text-sm text-gray-800 placeholder-gray-400 border border-gray-300 rounded-full focus:ring-2 focus:ring-green-600 focus:border-green-600 focus:outline-none"
       />
       <div
-        v-if="searchQuery.length == 0"
+        v-if="dishStore.searchText.length == 0"
         type="submit"
         class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-600"
       >
@@ -32,7 +32,12 @@
 </template>
 
 <script lang="js" setup>
-import { ref } from 'vue'
+import { useDishStore } from '@/client/stores'
+import { watchEffect, watch } from 'vue'
 
-const searchQuery = ref('')
+const dishStore = useDishStore()
+
+watch( () => dishStore.searchText, async () => {
+  await dishStore.fetchDishes()
+})
 </script>

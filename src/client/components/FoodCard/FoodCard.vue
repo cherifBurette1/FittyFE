@@ -27,7 +27,9 @@
           'w-6 h-6 bg-white px-0.5 py-1 rounded-md fa-solid fa-cart-shopping hover:cursor-pointer',
           { ' text-red-500': dish.isAddedToCart }
         ]"
-        @click.stop="cartStore.addToCart(dish.id, 1)"
+        @click.stop="
+          authenticationStore.userInfo ? cartStore.addToCart(dish.id, 1) : redirectToLogin()
+        "
       />
       <button
         data-tooltip-target="cart-tooltip"
@@ -38,9 +40,11 @@
           { ' text-red-500': dish.isAddedToFavorites }
         ]"
         @click.stop="
-          isFavorite
-            ? dishStore.removeFromFavorite(authenticationStore.userInfo?.userId ?? '', dish.id)
-            : dishStore.addToFavorite(authenticationStore.userInfo?.userId ?? '', dish.id)
+          authenticationStore.userInfo
+            ? isFavorite
+              ? dishStore.removeFromFavorite(authenticationStore.userInfo?.userId ?? '', dish.id)
+              : dishStore.addToFavorite(authenticationStore.userInfo?.userId ?? '', dish.id)
+            : redirectToLogin()
         "
       />
       <button
@@ -55,10 +59,14 @@
 </template>
 <script setup lang="ts">
 import type { dishType } from '@/shared/types'
+import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
 import { useDishStore, useCartStore, useAuthenticationStore } from '@/client/stores'
 
+const router = useRouter()
 const dishStore = useDishStore()
 const cartStore = useCartStore()
+const toast = useToast()
 const authenticationStore = useAuthenticationStore()
 defineProps({
   dish: {
@@ -70,4 +78,8 @@ defineProps({
     required: false
   }
 })
+function redirectToLogin() {
+  router.push('/login')
+  toast.info('You need to login first')
+}
 </script>
